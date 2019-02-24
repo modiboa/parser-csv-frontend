@@ -5,8 +5,8 @@ import axios from 'axios'
 import { CsvToHtmlTable } from 'react-csv-to-table';
 
 
-
 const endpoint = 'http://localhost:8080/upload'
+
 
 class App extends Component {
 
@@ -19,26 +19,20 @@ class App extends Component {
     }
   }
 
-  handleselectedFile = event => {
+  selectFile = event => {
     this.setState({
       selectedFile: event.target.files[0],
       loaded: 0,
     })
   }
 
-  handleUpload = () => {
+  uploadFile = () => {
     console.log("Uploading file")
     const data = new FormData()
     data.append('file', this.state.selectedFile, this.state.selectedFile.name)
 
     axios
-      .post(endpoint, data, {
-        onUploadProgress: ProgressEvent => {
-          this.setState({
-            loaded: (ProgressEvent.loaded / ProgressEvent.total) * 100,
-          })
-        },
-      })
+      .post(endpoint, data)
       .then(res => {
         console.log(res.data)
         this.setState({
@@ -47,20 +41,17 @@ class App extends Component {
       })
   }
 
-
-
   render() {
 
     if (this.state.tableData == null) {
 
       return (
         <div className="App">
-          <input type="file" name="" id="" onChange={this.handleselectedFile} />
-          <button onClick={this.handleUpload}>Upload</button>
-          <div> {Math.round(this.state.loaded, 2)} %</div>
-
+          <input type="file" name="" id="" onChange={this.selectFile} />
+          <button onClick={this.uploadFile}>Upload</button>
         </div>
       )
+
     } else {
 
       return ( 
